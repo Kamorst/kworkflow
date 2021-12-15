@@ -46,7 +46,7 @@ function test_diff_folders()
 
   # TODO: We need to investigate this LANG part. Ideally, we don't want it here
   output=$(LANG=en_US.UTF-8 diff_folders "$folder_1" "$folder_2")
-  assertEquals "$output" "Only in ${folder_1}: init.sql"$'\n'"Only in ${folder_1}: insert.sql"
+  assertEquals "$output" "Only in ${folder_1}: init.sql"$'\n'"Only in ${folder_1}: insert_kwdb.sql"$'\n'"Only in ${folder_1}: insert.sql"$'\n'"Only in ${folder_1}: kwdb.sql"
 }
 
 function test_diff_folders_no_difference()
