@@ -7,6 +7,7 @@ BUILD_CONFIG_FILENAME='build.config'
 DEPLOY_CONFIG_FILENAME='deploy.config'
 VM_CONFIG_FILENAME='vm.config'
 MAIL_CONFIG_FILENAME='mail.config'
+LORE_CONFIG_FILENAME='lore.config'
 KW_DIR='.kw'
 
 # Basic targets
@@ -34,6 +35,9 @@ declare -gA mail_config
 
 # Notification configuration
 declare -gA notification_config
+
+# Lore configuration
+declare -gA lore_config
 
 # Default target option from kworkflow.config
 declare -gA deploy_target_opt=(['vm']=1 ['local']=2 ['remote']=3)
@@ -83,6 +87,7 @@ function show_variables_main()
     [ssh]='SSH options'
     [vm]='VM options'
     [notification]='Notification options'
+    [lore]='Lore options'
     [misc]='Miscellaneous options'
   )
 
@@ -94,6 +99,7 @@ function show_variables_main()
     'notification'
     'misc'
     'build'
+    'lore'
   )
 
   say 'kw configuration variables:'
@@ -120,6 +126,10 @@ function show_variables_main()
         ;;
       'vm')
         show_vm_variables "$@"
+        continue
+        ;;
+      'lore')
+        show_lore_variables "$@"
         continue
         ;;
     esac
@@ -292,6 +302,29 @@ function show_notification_variables()
   print_array notification_config notification
 }
 
+function show_lore_variables()
+{
+  local test_mode=0
+  local has_local_lore_config='No'
+
+  [[ -f "${PWD}/${KW_DIR}/${LORE_CONFIG_FILENAME}" ]] && has_local_lore_config='Yes'
+
+  say 'kw Lore configuration variables:'
+  printf '%s\n' "  Local Lore config file: $has_local_lore_config"
+
+  if [[ "$1" == 'TEST_MODE' ]]; then
+    test_mode=1
+  fi
+
+  local -Ar lore=(
+    [lore_list]='Subscribed lore lists'
+  )
+
+  printf '%s\n' "  kw lore options:"
+  local -n descriptions="lore"
+  print_array lore_config lore
+}
+
 # This function read the configuration file and make the parser of the data on
 # it. For more information about the configuration file, take a look at
 # "etc/kworkflow.config" in the kworkflow directory.
@@ -349,6 +382,9 @@ function load_configuration()
       ;;
     'vm')
       target_array='vm_config'
+      ;;
+    'lore')
+      target_array='lore_config'
       ;;
   esac
 
@@ -416,6 +452,11 @@ load_notification_config()
   load_configuration 'notification'
 }
 
+load_lore_config()
+{
+  load_configuration 'lore'
+}
+
 load_all_config()
 {
   load_notification_config
@@ -424,6 +465,7 @@ load_all_config()
   load_build_config
   load_mail_config
   load_vm_config
+  load_lore_config
 }
 
 function vars_help()

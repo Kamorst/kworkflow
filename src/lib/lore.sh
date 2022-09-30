@@ -2,6 +2,7 @@
 # kernel lore archives. it handles fecthing, listing and downloading of patches
 # sent to the public mailing lists.
 
+include "$KW_LIB_DIR/kw_config_loader.sh"
 include "${KW_LIB_DIR}/kwlib.sh"
 include "${KW_LIB_DIR}/lib/web_access.sh"
 
@@ -52,3 +53,5 @@ function test_lore()
     printf '* %s\n  = %s\n' "${index}" "${available_lore_mailing_lists["$index"]}"
   done
 }
+
+load_lore_config

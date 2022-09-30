@@ -57,6 +57,9 @@ function tearDown()
   unset notification_config
   declare -gA notification_config
 
+  unset lore_config
+  declare -gA lore_config
+
   if [[ -d "$SHUNIT_TMPDIR" ]]; then
     rm -rf "$SHUNIT_TMPDIR"
   fi
@@ -233,6 +236,7 @@ function test_show_variables_main_completeness()
   local output_build
   local output_deploy
   local output_notification
+  local output_lore
 
   configurations=()
 
@@ -244,8 +248,9 @@ function test_show_variables_main_completeness()
   output_vm="$(get_all_assigned_options_to_string_helper "$KW_VM_CONFIG_SAMPLE")"
   output_mail="$(get_all_assigned_options_to_string_helper "$KW_MAIL_CONFIG_SAMPLE")"
   output_notification="$(get_all_assigned_options_to_string_helper "$KW_NOTIFICATION_CONFIG_SAMPLE")"
+  output_lore="$(get_all_assigned_options_to_string_helper "$KW_LORE_CONFIG_SAMPLE")"
 
-  output+=" $output_build $output_deploy $output_vm $output_mail $output_notification"
+  output+=" $output_build $output_deploy $output_vm $output_mail $output_notification $output_lore"
   for option in $output; do
     possible_options["$option"]=1
   done
@@ -255,6 +260,7 @@ function test_show_variables_main_completeness()
   cp "$KW_VM_CONFIG_SAMPLE" "$TMPDIR_KW_FOLDER"
   cp "$KW_MAIL_CONFIG_SAMPLE" "$TMPDIR_KW_FOLDER"
   cp "$KW_NOTIFICATION_CONFIG_SAMPLE" "$TMPDIR_KW_FOLDER"
+  cp "$KW_LORE_CONFIG_SAMPLE" "$TMPDIR_KW_FOLDER"
   cp "${SAMPLES_DIR}/deploy_all_options.config" "${TMPDIR_KW_FOLDER}/deploy.config"
 
   load_all_config
@@ -304,6 +310,7 @@ function test_show_variables_main_correctness()
     [disable_statistics_data_track]=14
     [gui_on]=15
     [gui_off]=16
+    [lore_list]='AMD-GFX,dri_devel'
   )
 
   output="$(show_variables_main | grep -E '^\s{3,}')"
