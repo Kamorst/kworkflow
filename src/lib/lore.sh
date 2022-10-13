@@ -9,6 +9,24 @@ include "${KW_LIB_DIR}/lib/web_access.sh"
 declare -gr LORE_URL='https://lore.kernel.org/'
 declare -gA available_lore_mailing_lists
 
+declare -gA options_values
+
+function lore_main()
+{
+  if [[ "$1" =~ -h|--help ]]; then
+    lore_help "$1"
+    exit 0
+  fi
+
+  parse_lore_options "$@"
+  if [[ "$?" -gt 0 ]]; then
+    complain "${options_values['ERROR']}"
+    lore_help
+    return 22 # EINVAL
+  fi
+
+}
+
 # This function downloads the lore archive main page and retrieves the names
 # and descriptions of the mailing lists currently available in the archive, it
 # then saves that information in the `available_lore_mailing_lists`

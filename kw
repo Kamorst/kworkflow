@@ -65,7 +65,7 @@ function kw()
       (
         include "${KW_LIB_DIR}/lib/lore.sh"
 
-        test_lore "$@"
+        lore_main "$@"
         return "$?"
       )
       ;;
